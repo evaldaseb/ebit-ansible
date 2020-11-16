@@ -1,5 +1,6 @@
 ---
 - name: settings for all windows servers
+  hosts: all
 
   tasks:
   - name: Ensure c:\temp exists
