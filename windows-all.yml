@@ -8,7 +8,7 @@
       path: c:\temp
       state: directory
 
-  - name: Get info for DAC service
-    ansible.windows.win_service_info:
+  - name: Ensure DAC service is running
+    win_service:
       name: DAC
-    register: service_info
+      state: started
