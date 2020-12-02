@@ -97,5 +97,5 @@
     ansible.windows.win_regedit:
       path: HKCU:\Control Panel\International\User Profile\en-GB
       name: CachedLanguageName      
-      data: @Winlangdb.dll,-1110
+      data: "@Winlangdb.dll,-1110"
       type: string
