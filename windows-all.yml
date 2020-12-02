@@ -98,4 +98,4 @@
       path: HKCU:\Control Panel\International\User Profile\en-GB
       name: CachedLanguageName      
       data: @Winlangdb.dll,-1110
-      type: str
+      type: string
