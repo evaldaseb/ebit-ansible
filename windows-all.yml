@@ -81,3 +81,14 @@
       location: 242
       format: en-GB
       copy_settings: yes
+      
+  - name: Registry - adding en-GB path to User Profile
+    ansible.windows.win_regedit:
+      path: HKCU:\Control Panel\International\User Profile\en-GB
+      
+  - name: Registry - adding en-GB code User Profile
+    ansible.windows.win_regedit:
+      path: HKCU:\Control Panel\International\User Profile\en-GB
+      name: 0809:00000809      
+      data: 1
+      type: dword
