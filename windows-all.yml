@@ -80,5 +80,4 @@
     community.windows.win_region:
       location: 242
       format: en-GB
-      unicode_language: en-GB
       copy_settings: yes
