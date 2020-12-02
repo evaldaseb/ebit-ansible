@@ -92,3 +92,10 @@
       name: 0809:00000809      
       data: 1
       type: dword
+      
+  - name: Registry - adding CachedLanguageName to User Profile
+    ansible.windows.win_regedit:
+      path: HKCU:\Control Panel\International\User Profile\en-GB
+      name: CachedLanguageName      
+      data: @Winlangdb.dll,-1110
+      type: str
