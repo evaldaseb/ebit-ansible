@@ -13,7 +13,69 @@
       name: DAC
     register: service_info
 
+  - name: Gather info about CloudWatch service
+    ansible.windows.win_service_info:
+      name: AmazonCloudWatchAgent
+    register: cw_service_info
+
+  - name: Obtain information about amazon-cloudwatch-agent.msi file
+    ansible.windows.win_stat:
+      path: c:\temp\amazon-cloudwatch-agent.msi
+    register: cwagent_info
+
+  - name: Download CloudWatch Agent
+    ansible.windows.win_get_url:
+      url: https://s3.eu-west-2.amazonaws.com/amazoncloudwatch-agent-eu-west-2/windows/amd64/latest/amazon-cloudwatch-agent.msi
+      dest: c:\temp
+    when: cwagent_info.stat.exists==false and cw_service_info.exists==false
+
+  - name: Install CloudWatch Agent
+    ansible.windows.win_package:
+      path: c:\temp\amazon-cloudwatch-agent.msi
+      state: present
+    when: cw_service_info.exists==false and cwagent_info.stat.exists==true
+
+  - name: Ensure dacupd.exe is in temp folder
+    win_copy:
+      src: /home/ec2-user/ansible/DACUPD.exe
+      dest: c:\temp
+    when: service_info.exists==false
+
+  - name: Install dacupd.exe
+    win_command: dacupd.exe 26
+    args:
+      chdir: c:\temp
+    when: service_info.exists==false
+    
   - name: Ensure DAC service is running
     win_service:
       name: DAC
       state: started
+
+  - name: Ensure SSM Agent and CloudWatch Agent services are running
+    win_service:
+      name: "{{ item }}"
+      state: started
+    loop:
+      - AmazonSSMAgent
+      - AmazonCloudWatchAgent
+
+  - name: Ensure Couldwatch agent fireall rule is enabled ports 80, 443
+    win_firewall_rule:
+      name: Allow Cloudwatch
+      localport: any
+      action: allow
+      direction: out
+      program: '%ProgramFiles%\Amazon\SSM\Plugins\awsCloudWatch\AWS.CloudWatch.exe'
+      protocol: tcp
+      remoteport: 443,80
+      state: present
+      enabled: yes
+      
+  - name: Set timezone to 'GMT Standard Time' (GMT)
+    community.windows.win_timezone:
+      timezone: GMT Standard Time
+
+  - name: Set the location to United Kingdom
+    community.windows.win_region:
+      location: 242
