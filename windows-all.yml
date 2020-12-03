@@ -99,3 +99,10 @@
       name: CachedLanguageName      
       data: "@Winlangdb.dll,-1110"
       type: string
+      
+  - name: Registry - changing short time formatting
+    ansible.windows.win_regedit:
+      path: HKCU:\Control Panel\International
+      name: sShortTime     
+      data: HH:mm
+      type: string
