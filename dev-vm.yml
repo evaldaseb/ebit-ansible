@@ -1,0 +1,9 @@
+---
+- name: settings for all windows servers
+  hosts: all
+
+  tasks:
+  - name: Ensure c:\temp exists
+    win_file:
+      path: c:\temp
+      state: directory
