@@ -1,5 +1,5 @@
 ---
-- name: settings for all windows servers
+- name: settings for dev instances in AWS
   hosts: all
 
   tasks:
@@ -7,3 +7,12 @@
     win_file:
       path: c:\temp
       state: directory
+
+  - name: Change the hostname to sample-hostname
+    ansible.windows.win_hostname:
+      name: RP-DEV-14
+    register: res
+
+  - name: Reboot
+    ansible.windows.win_reboot:
+    when: res.reboot_required
